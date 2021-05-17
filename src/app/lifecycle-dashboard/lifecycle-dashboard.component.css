@@ -1,0 +1,13 @@
+.container {
+  width: 400px;
+  height: 400px;
+  padding: 20px;
+  background-color: #5fafff36;
+  box-sizing: border-box;
+}
+
+.text {
+  padding: 10px;
+  font-size: 20px;
+  margin-top: 20px;
+}
