@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {HighlightedNode} from "../types/highlighted-node";
 
 @Component({
   selector: 'app-lifecycle-dashboard',
@@ -6,7 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./lifecycle-dashboard.component.css']
 })
 export class LifecycleDashboardComponent implements OnInit {
-  @Input() node: {name: string, currentLifecycle: string} = { name: '', currentLifecycle: ''}
+  @Input() node: HighlightedNode = { name: '', currentLifecycle: ''}
 
   constructor() { }
 

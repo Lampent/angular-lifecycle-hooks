@@ -56,10 +56,18 @@ p {
   opacity: 0.8;
 }
 
-.content {
+.container {
   display: flex;
+  flex-direction: column;
   margin: 82px auto 32px;
   padding: 0 16px;
+  max-width: 960px;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  display: flex;
   max-width: 960px;
   align-items: center;
   justify-content: center;
@@ -78,8 +86,4 @@ svg.material-icons:not(:last-child) {
   padding: 20px;
   width: auto;
   cursor: pointer;
-}
-
-.graph-container {
-  border: 1px solid #1976d2;
 }

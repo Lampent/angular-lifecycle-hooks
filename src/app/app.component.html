@@ -1,34 +1,15 @@
 <div class="toolbar" role="banner">
   <span class="button">Angular change detection tester</span>
   <div class="spacer"></div>
-  <div class="button">Test A</div>
-  <div class="button">Test B</div>
+  <div class="button" (click)="toggleRecordingStatus()">{{recordingStatus ? 'Stop Recording' : 'Start Recording' }}</div>
 </div>
-
-<div class="content" role="main">
-  <app-lifecycle-dashboard [node]="highlightedNodesDetails"></app-lifecycle-dashboard>
-  <div class="graph-container">
-    <ngx-graph
-      class="chart-container"
-      [view]="[800, 400]"
-      [draggingEnabled]="false"
-      [links]="links"
-      [nodes]="nodes"
-      [nodeHeight]="50"
-      [nodeWidth]="100"
-    >
-      <ng-template #nodeTemplate let-node>
-        <svg:g class="node">
-          <svg:rect
-            [attr.width]="node.dimension.width"
-            [attr.height]="node.dimension.height"
-            [attr.fill]="node.data.highlight ? '#56a1ec' : '#5fafff36'"
-          />
-          <svg:text alignment-baseline="central" [attr.x]="(node.dimension.width / 2) - 5" [attr.y]="node.dimension.height / 2">
-            {{node.label}}
-          </svg:text>
-        </svg:g>
-      </ng-template>
-    </ngx-graph>
+<div class="container">
+  <div class="content" role="main">
+    <app-lifecycle-dashboard [node]="highlightedNodesDetails"></app-lifecycle-dashboard>
+    <app-components-graph [nodes]="nodes" [edges]="edges"></app-components-graph>
+  </div>
+  <div class="panel">
+    <app-main-panel></app-main-panel>
   </div>
 </div>
+
