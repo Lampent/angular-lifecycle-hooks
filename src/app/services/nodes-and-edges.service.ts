@@ -4,7 +4,7 @@ import {Node, Edge} from '@swimlane/ngx-graph'
 @Injectable({
   providedIn: 'root'
 })
-export class NodesAndLinksService {
+export class NodesAndEdgesService {
   private readonly COMPONENT_SUFFIX: string = "component";
 
   getEdges(links: string[]): Edge[] {
@@ -45,7 +45,7 @@ export class NodesAndLinksService {
    * @param name, a letter of the english abc such as A
    */
   getId(name: string): string {
-    return `${name}-${this.COMPONENT_SUFFIX}`;
+    return `${name.toLowerCase()}-${this.COMPONENT_SUFFIX}`;
   }
 
   highlightNode(nodes: Node[], id: string): Node[] {

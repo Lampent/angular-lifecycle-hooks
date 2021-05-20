@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {LifecycleMonitoredComponent} from "../lifecycle-monitored-component";
+import {LifecycleMonitorService} from "../../services/lifecycle-monitor.service";
 
 @Component({
   selector: 'app-sub-panel',
@@ -8,10 +9,10 @@ import {LifecycleMonitoredComponent} from "../lifecycle-monitored-component";
 })
 export class SubPanelComponent extends LifecycleMonitoredComponent {
 
-  constructor() {
-    super(null);
-  }
-  ngOnInit(): void {
+  component = 'B';
+
+  constructor(protected lifecycleMonitorService: LifecycleMonitorService) {
+    super(lifecycleMonitorService);
   }
 
 }

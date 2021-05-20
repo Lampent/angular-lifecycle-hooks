@@ -1,6 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {LifecycleMonitoredComponent} from "../lifecycle-monitored-component";
 import {FormControl} from "@angular/forms";
+import {LifecycleMonitorService} from "../../services/lifecycle-monitor.service";
 
 @Component({
   selector: 'app-date-picker',
@@ -8,18 +9,16 @@ import {FormControl} from "@angular/forms";
   styleUrls: ['./date-picker.component.css']
 })
 export class DatePickerComponent extends LifecycleMonitoredComponent {
+
+  component = 'D';
   date = new FormControl(new Date());
   @Input() title: string = 'Choose a date';
 
-  constructor() {
-    super(null);
+  constructor(protected lifecycleMonitorService: LifecycleMonitorService) {
+    super(lifecycleMonitorService);
   }
 
   dateChanged($event: any): void {
 
   }
-
-  ngOnInit(): void {
-  }
-
 }

@@ -1,9 +1,11 @@
 import {Component} from '@angular/core';
-import {NodesAndLinksService} from "./services/nodes-and-links.service";
-import {interval} from "rxjs";
-import {Node, Edge} from "@swimlane/ngx-graph";
-import {LifecycleEnum} from "./types/lifecycle.enum";
+import {NodesAndEdgesService} from "./services/nodes-and-edges.service";
+import {interval, Subscription, zip} from "rxjs";
+import {Edge, Node} from "@swimlane/ngx-graph";
 import {HighlightedNode} from "./types/highlighted-node";
+import {LifecycleMonitorService} from "./services/lifecycle-monitor.service";
+import {LifecycleLog} from "./types/lifecycle-log";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-root',
@@ -11,34 +13,31 @@ import {HighlightedNode} from "./types/highlighted-node";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  nodesLetters: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
-  edges: Edge[] = this.nodesAndLinksService.getEdges(['a-b', 'a-c', 'b-d', 'b-e', 'c-f', 'c-g']);
-  nodes: Node[] = this.nodesAndLinksService.getNodes(this.nodesLetters);
+  edges: Edge[] = this.nodesAndEdgesService.getEdges(['a-b', 'a-c', 'b-d', 'b-e', 'c-f', 'c-g']);
+  nodes: Node[] = this.nodesAndEdgesService.getNodes(['a', 'b', 'c', 'd', 'e', 'f', 'g']);
   highlightedNodesDetails: HighlightedNode = {name: '', currentLifecycle: ''};
   recordingStatus: boolean = false;
+  recordSubscription: Subscription = new Subscription();
 
-  constructor(private nodesAndLinksService: NodesAndLinksService) {
-    interval(500).subscribe(() => {
-      const nodeDetails: { id: string, letter: string } = this.getRandomNodeId();
-      this.highlightedNodesDetails = {
-        name: nodeDetails.letter.toUpperCase(),
-        currentLifecycle: LifecycleEnum.NG_ON_INIT
-      }
-      this.nodesAndLinksService.highlightNode(this.nodes, nodeDetails.id)
-    })
+  constructor(private nodesAndEdgesService: NodesAndEdgesService,
+              private lifecycleMonitorService: LifecycleMonitorService) {
   }
 
   toggleRecordingStatus() {
     this.recordingStatus = !this.recordingStatus;
-  }
+    this.recordSubscription.unsubscribe();
+    if (!this.recordingStatus) {
+      this.recordSubscription = zip(this.lifecycleMonitorService.getLifecycleLogs(), interval(1000))
+        .pipe(map((a) => a[0]))
+        .subscribe((log: LifecycleLog) => {
+          this.highlightedNodesDetails = {
+            name: log.component.toUpperCase(),
+            currentLifecycle: log.lifecycle
+          };
+          this.nodes = this.nodesAndEdgesService.highlightNode(this.nodes, this.nodesAndEdgesService.getId(log.component))
+        });
+    }
+    this.lifecycleMonitorService.init(this.recordingStatus);
 
-  getRandomNodeId(): { id: string, letter: string } {
-    const index = this.randomInteger(0, this.nodesLetters.length - 1);
-    return {id: this.nodesAndLinksService.getId(this.nodesLetters[index]), letter: this.nodesLetters[index]};
   }
-
-  randomInteger(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
 }
